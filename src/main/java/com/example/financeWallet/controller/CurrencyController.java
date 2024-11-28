@@ -1,0 +1,25 @@
+package com.example.financeWallet.controller;
+
+import com.example.financeWallet.dto.CurrencyDTO;
+import com.example.financeWallet.service.CurrencyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(value = "/currency")
+public class CurrencyController {
+    @Autowired
+    private CurrencyService currencyService;
+
+    @GetMapping
+    public List<CurrencyDTO> listALl() {
+        return currencyService.listAll();
+    }
+
+    @PostMapping
+    public void insert(@RequestBody CurrencyDTO dto) {
+        currencyService.insert(dto);
+    }
+}
