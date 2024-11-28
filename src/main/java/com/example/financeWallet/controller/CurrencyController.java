@@ -5,6 +5,7 @@ import com.example.financeWallet.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -14,12 +15,12 @@ public class CurrencyController {
     private CurrencyService currencyService;
 
     @GetMapping
-    public List<CurrencyDTO> listALl() {
+    public List<CurrencyDTO> listALl(){
         return currencyService.listAll();
     }
 
     @PostMapping
-    public void insert(@RequestBody CurrencyDTO dto) {
+    public void insert(@RequestBody CurrencyDTO dto) throws IOException, InterruptedException {
         currencyService.insert(dto);
     }
 }

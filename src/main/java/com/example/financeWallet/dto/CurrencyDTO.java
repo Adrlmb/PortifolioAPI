@@ -1,8 +1,10 @@
 package com.example.financeWallet.dto;
 
 import com.example.financeWallet.entity.CurrencyEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.BeanUtils;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrencyDTO {
     private Long id;
     private String code; // code of the crypto bought
