@@ -24,7 +24,7 @@ public class BuyService {
         return buy.stream().map(BuyDTO::new).toList();
     }
 
-    public void insert(BuyDTO dto) {
+    public void insert(BuyDTO dto){
         BuyEntity buy = new BuyEntity(dto);
         buyRepository.save(buy);
     }
