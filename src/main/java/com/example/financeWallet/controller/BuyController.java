@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//teste github
 @RestController
 @RequestMapping(value = "/buy")
 public class BuyController {
