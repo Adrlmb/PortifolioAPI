@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class FinanceWalletApplication {
-
+	//teste
 	public static void main(String[] args) throws IOException, InterruptedException {
 		SpringApplication.run(FinanceWalletApplication.class, args);
 	}
