@@ -25,39 +25,16 @@ public class CurrencyService {
     }
 
     public void insert(CurrencyDTO dto) throws IOException, InterruptedException {
-//        String apiUrl = "https://economia.awesomeapi.com.br/last/USD-BRL";
-//
-//        //Configuração do HttpClient
-//        HttpClient client = HttpClient.newHttpClient();
-//        HttpRequest request = HttpRequest.newBuilder()
-//                .uri(URI.create(apiUrl))
-//                .GET()
-//                .build();
-//
-//        //Enviando a requisição e obtendo a resposta
-//        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//
-//        dto = null;
-//        if (response.statusCode() == 200) {
-//            //Processando o JSON com Jackson
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String jsonResponse = response.body();
-//
-//            //Extraindo o objeto USDBRL do JSON
-//            dto = objectMapper.readTree(jsonResponse)
-//                    .get("USDBRL")
-//                    .traverse(objectMapper)
-//                    .readValueAs(CurrencyDTO.class);
-//            System.out.println(dto);
-            dto = cryptoAPi();
-            CurrencyEntity buy = new CurrencyEntity(dto);
-            currencyRepository.save(buy);
+
+        CurrencyEntity buy = new CurrencyEntity(dto); //pega o que foi digitado no post
+        dto = cryptoAPi(dto.getCode()); // grava os dados da api diretamento no dto de acordo com a crypto digitada anteriormente
+        CurrencyEntity finished = new CurrencyEntity(dto); // manda os dados para o banco de dados
+        currencyRepository.save(finished); // salva
     }
 
-    public CurrencyDTO cryptoAPi () throws IOException, InterruptedException {
+    public CurrencyDTO cryptoAPi (String code) throws IOException, InterruptedException {
         CurrencyDTO dto;
-
-        String apiUrl = "https://economia.awesomeapi.com.br/last/USD-BRL";
+        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code.toUpperCase() +"-USD";
 
         //Configuração do HttpClient
         HttpClient client = HttpClient.newHttpClient();
@@ -77,11 +54,9 @@ public class CurrencyService {
 
             //Extraindo o objeto USDBRL do JSON
             dto = objectMapper.readTree(jsonResponse)
-                    .get("USDBRL")
+                    .get(code +"USD")
                     .traverse(objectMapper)
                     .readValueAs(CurrencyDTO.class);
-            System.out.println(dto);
-
         }
         return dto;
     }
