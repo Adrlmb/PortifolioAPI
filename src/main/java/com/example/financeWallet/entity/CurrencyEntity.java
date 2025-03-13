@@ -2,7 +2,14 @@ package com.example.financeWallet.entity;
 
 import com.example.financeWallet.dto.CurrencyDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 
 @Entity
 @Table(name = "FNW_CURRENCY")
@@ -18,37 +25,4 @@ public class CurrencyEntity {
         BeanUtils.copyProperties(dto, this);
     }
 
-    public CurrencyEntity(){}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCodein() {
-        return codein;
-    }
-
-    public void setCodein(String codein) {
-        this.codein = codein;
-    }
-
-    public String getBid() {
-        return bid;
-    }
-
-    public void setBid(String bid) {
-        this.bid = bid;
-    }
 }
