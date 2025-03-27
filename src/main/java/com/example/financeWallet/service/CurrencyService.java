@@ -34,7 +34,8 @@ public class CurrencyService {
 
     public CurrencyDTO cryptoAPi (String code) throws IOException, InterruptedException {
         CurrencyDTO dto;
-        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code.toUpperCase() +"-USD";
+        code = code.toUpperCase();
+        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-USD";
 
         //Configuração do HttpClient
         HttpClient client = HttpClient.newHttpClient();
