@@ -12,7 +12,7 @@ public class FinanceWalletApplication {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		SpringApplication.run(FinanceWalletApplication.class, args);
-
+		//teste
 	}
 
 }
