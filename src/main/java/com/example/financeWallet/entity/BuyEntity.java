@@ -41,6 +41,9 @@ public class BuyEntity {
     @Column(name = "EXCHANGE")
     private String exchange;
 
+    @Column(name = "profit")
+    private Long profit;
+
     public BuyEntity(BuyDTO dto){
         BeanUtils.copyProperties(dto, this);
     }
