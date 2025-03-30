@@ -27,15 +27,16 @@ public class CurrencyService {
     public void insert(CurrencyDTO dto) throws IOException, InterruptedException {
 
         CurrencyEntity buy = new CurrencyEntity(dto); //pega o que foi digitado no post
-        dto = cryptoAPi(dto.getCode()); // grava os dados da api diretamento no dto de acordo com a crypto digitada anteriormente
+        dto = cryptoAPi(dto.getCode(), dto.getCodein()); // grava os dados da api diretamento no dto de acordo com a crypto digitada anteriormente
         CurrencyEntity finished = new CurrencyEntity(dto); // manda os dados para o banco de dados
         currencyRepository.save(finished); // salva
     }
 
-    public CurrencyDTO cryptoAPi (String code) throws IOException, InterruptedException {
+    public CurrencyDTO cryptoAPi (String code, String codein) throws IOException, InterruptedException {
         CurrencyDTO dto;
         code = code.toUpperCase();
-        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-USD";
+        codein = codein.toUpperCase();
+        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-"+ codein;
 
         //Configuração do HttpClient
         HttpClient client = HttpClient.newHttpClient();
@@ -55,7 +56,7 @@ public class CurrencyService {
 
             //Extraindo o objeto USDBRL do JSON
             dto = objectMapper.readTree(jsonResponse)
-                    .get(code +"USD")
+                    .get(code + codein)
                     .traverse(objectMapper)
                     .readValueAs(CurrencyDTO.class);
         }
