@@ -22,9 +22,9 @@ public class BuyDTO {
     private String taxCryptoCode;
     private String taxAmount;
     private String exchange;
+    private String profit;
 
     public BuyDTO(BuyEntity entity){
         BeanUtils.copyProperties(entity, this);
     }
-
 }
