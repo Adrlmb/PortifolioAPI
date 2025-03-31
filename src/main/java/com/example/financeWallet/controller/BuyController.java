@@ -2,17 +2,24 @@ package com.example.financeWallet.controller;
 
 import com.example.financeWallet.dto.BuyDTO;
 import com.example.financeWallet.service.BuyService;
+import com.example.financeWallet.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/buy")
 public class BuyController {
+
     @Autowired
     private BuyService buyService;
+
+    @Autowired
+    private MasterService masterService;
+
 
     @GetMapping
     public List<BuyDTO> listALl() {
@@ -25,8 +32,9 @@ public class BuyController {
     }
 
     @PostMapping
-    public void insert(@RequestBody BuyDTO dto) {
-        buyService.insert(dto);
+    public void insert(@RequestBody BuyDTO dto) throws IOException, InterruptedException {
+        masterService.insert(dto);
+//        buyService.insert(dto);
     }
 
     @PutMapping
