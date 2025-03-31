@@ -34,7 +34,6 @@ public class BuyController {
     @PostMapping
     public void insert(@RequestBody BuyDTO dto) throws IOException, InterruptedException {
         masterService.insert(dto);
-//        buyService.insert(dto);
     }
 
     @PutMapping
