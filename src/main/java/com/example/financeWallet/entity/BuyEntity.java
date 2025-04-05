@@ -18,10 +18,13 @@ public class BuyEntity {
     private Long id;
 
     @Column(name = "CRYPTO_CODE") // crypto bought
-    private String purchasedCryptoCode;
+    private String code;
 
     @Column(name = "CRYPTO") // crypto used to buy
-    private String cryptoUsed;
+    private String codein;
+
+    @Column(name = "CURRENT_VALUE") // crypto used to buy
+    private String bid;
 
     @Column(name = "BUY_DATE")
     private String buyDate;
