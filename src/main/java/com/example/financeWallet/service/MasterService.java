@@ -6,10 +6,13 @@ import com.example.financeWallet.entity.BuyEntity;
 import com.example.financeWallet.entity.CurrencyEntity;
 import com.example.financeWallet.repository.BuyRepository;
 import com.example.financeWallet.repository.CurrencyRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,35 +37,71 @@ public class MasterService {
 
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
 
-        CurrencyDTO currencyDTO = cryptoAPi(buyDTO.getPurchasedCryptoCode(), buyDTO.getCryptoUsed()); // grava os dados da api diretamento no dto de acordo com a crypto digitada anteriormente
-        CurrencyEntity currencyEntity = new CurrencyEntity(currencyDTO); // manda os dados para o banco de dados
+        setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
-        currencyRepository.save(currencyEntity);//Salva na tabela currency
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
 
-    public CurrencyDTO cryptoAPi (String code, String codein) throws IOException, InterruptedException {
-        code = code.toUpperCase();
-        codein = codein.toUpperCase();
-        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-"+ codein;
 
-        //Configuração do HttpClient
+    public void setBidValue(String code, String codein, BuyDTO buyDTO) throws IOException, InterruptedException {
+        String chave = code.toUpperCase() + codein.toUpperCase();
+        String api = "https://economia.awesomeapi.com.br/last/" + code + "-" + codein;
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl))
+                .uri(URI.create(api))
                 .GET()
                 .build();
 
-        //Enviando a requisição e obtendo a resposta
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-
         if (response.statusCode() == 200) {
-            //Extraindo o objeto USDBRL do JSON
-            return objectMapper.readTree(response.body())
-                    .get(code + codein)
-                    .traverse(objectMapper)
-                    .readValueAs(CurrencyDTO.class);
+            JsonNode root = objectMapper.readTree(response.body())
+                    .get(chave);
+
+            buyDTO.setBid(root.get("bid").asText()); // Atualiza só o campo bid
+
+        }else{
+            System.out.println("Erro ao buscar cotação");
         }
-       return null;
     }
+
+    public BigDecimal bigDecimalConverter(String value){
+        try{
+            if(value == null || value.isBlank()){
+                return BigDecimal.ZERO;
+            }else {
+                return new BigDecimal(value).setScale(2, RoundingMode.HALF_DOWN);
+            }
+        }catch (NullPointerException e){
+            System.out.println("Erro ao converter");
+            return BigDecimal.ZERO;
+        }
+    }
+
+
+// grava os dados da api em um dto com os campos identicos
+//    public CurrencyDTO cryptoAPi (String code, String codein) throws IOException, InterruptedException {
+//        code = code.toUpperCase();
+//        codein = codein.toUpperCase();
+//        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-"+ codein;
+//
+//        //Configuração do HttpClient
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create(apiUrl))
+//                .GET()
+//                .build();
+//
+//        //Enviando a requisição e obtendo a resposta
+//        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//
+//        if (response.statusCode() == 200) {
+//            //Extraindo o objeto USDBRL do JSON
+//            return objectMapper.readTree(response.body())
+//                    .get(code + codein)
+//                    .traverse(objectMapper)
+//                    .readValueAs(CurrencyDTO.class);
+//        }
+//       return null;
+//    }
 }
