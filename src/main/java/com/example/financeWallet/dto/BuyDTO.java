@@ -1,29 +1,24 @@
 package com.example.financeWallet.dto;
-
 import com.example.financeWallet.entity.BuyEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
-
+@NoArgsConstructor // because already have a constructor created
+@Data
 public class BuyDTO {
     private Long id;
     private String code;
     private String codein; // crypto used to buy
-    private String bid;
+    private BigDecimal bid;
     private String buyDate;
     private String amountCryptoPurchased;
-    private String amountSpent; // amount used to buy crypto
+    private BigDecimal amountSpent; // amount used to buy crypto
     private String taxCryptoCode;
-    private String taxAmount;
+    private BigDecimal taxAmount;
     private String exchange;
-    private String profit;
+    private BigDecimal profit;
 
     public BuyDTO(BuyEntity entity){
         BeanUtils.copyProperties(entity, this);
@@ -40,8 +35,7 @@ public class BuyDTO {
     public void setTaxCryptoCode(String taxCryptoCode) {
         this.taxCryptoCode = taxCryptoCode.toUpperCase();
     }
-
-    public void setProfit(String profit) {
-        this.profit = profit.toUpperCase();
+    public void setExchange(String exchange){
+        this.exchange = exchange.toUpperCase();
     }
 }
