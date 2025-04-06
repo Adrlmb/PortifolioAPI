@@ -36,7 +36,6 @@ public class MasterService {
     }
 
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
-
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
@@ -58,8 +57,8 @@ public class MasterService {
             JsonNode root = objectMapper.readTree(response.body())
                     .get(chave);
 
-            buyDTO.setBid(root.get("bid").asText()); // Atualiza só o campo bid
-
+            BigDecimal bid = bigDecimalConverter(root.get("bid").asText());
+            buyDTO.setBid(bid.setScale(2, RoundingMode.DOWN)); // Atualiza só o campo bid
         }else{
             System.out.println("Erro ao buscar cotação");
         }
@@ -70,7 +69,7 @@ public class MasterService {
             if(value == null || value.isBlank()){
                 return BigDecimal.ZERO;
             }else {
-                return new BigDecimal(value).setScale(2, RoundingMode.HALF_DOWN);
+                return new BigDecimal(value);
             }
         }catch (NullPointerException e){
             System.out.println("Erro ao converter");
