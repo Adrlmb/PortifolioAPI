@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+import java.math.BigDecimal;
 
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "FNW_BUY")
 public class BuyEntity {
@@ -24,7 +24,7 @@ public class BuyEntity {
     private String codein;
 
     @Column(name = "CURRENT_VALUE") // crypto used to buy
-    private String bid;
+    private BigDecimal bid;
 
     @Column(name = "BUY_DATE")
     private String buyDate;
@@ -33,19 +33,19 @@ public class BuyEntity {
     private String amountCryptoPurchased;
 
     @Column(name = "AMOUNT_SPENT")
-    private String amountSpent; // amount used to buy crypto
+    private BigDecimal amountSpent; // amount used to buy crypto
 
     @Column(name = "TAX_CODE")
     private String taxCryptoCode;
 
     @Column(name = "TAX_AMOUNT")
-    private String taxAmount;
+    private BigDecimal taxAmount;
 
     @Column(name = "EXCHANGE")
     private String exchange;
 
     @Column(name = "profit")
-    private Long profit;
+    private BigDecimal profit;
 
     public BuyEntity(BuyDTO dto){
         BeanUtils.copyProperties(dto, this);
