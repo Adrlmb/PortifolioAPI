@@ -1,5 +1,4 @@
 package com.example.financeWallet.service;
-
 import com.example.financeWallet.dto.BuyDTO;
 import com.example.financeWallet.dto.CurrencyDTO;
 import com.example.financeWallet.entity.BuyEntity;
@@ -35,6 +34,31 @@ public class MasterService {
         this.objectMapper = new ObjectMapper();
     }
 
+    //GET list all
+    public List<BuyDTO> listAll(){
+        List<BuyEntity> buy = buyRepository.findAll();
+        return buy.stream().map(BuyDTO::new).toList();
+    }
+
+    //GET list by id
+    public List<BuyDTO> listByID(Long id){
+        Optional<BuyEntity> buy = buyRepository.findById(id);
+        return buy.stream().map(BuyDTO::new).toList();
+    }
+
+    //PUT 
+    public BuyDTO modify(BuyDTO buyDTO){
+        BuyEntity buy = new BuyEntity(buyDTO);
+        return new BuyDTO(buyRepository.save(buy));
+    }
+
+    //DELETE
+    public void delete(Long id){
+        BuyEntity buy = buyRepository.findById(id).get();
+        buyRepository.delete(buy);
+
+    
+    //POST insert
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
