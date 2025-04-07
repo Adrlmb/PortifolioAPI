@@ -61,6 +61,7 @@ public class MasterService {
     //POST insert
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
+        setProfitValue(buyDTO.getBid(), buyDTO.getAmountCryptoPurchased(), buyDTO.getAmountSpent(), buyDTO.getTaxAmount(), buyDTO);
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
@@ -86,6 +87,12 @@ public class MasterService {
         }else{
             System.out.println("Erro ao buscar cotação");
         }
+    }
+
+    public void setProfitValue(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
+        BigDecimal mult = currentValue.multiply(bigDecimalConverter(amountCrypto));
+        BigDeciml cost = amountSpent.add(taxAmount);
+        buyDTO.setProfit(mult.subtract(cost));
     }
 
     public BigDecimal bigDecimalConverter(String value){
