@@ -49,7 +49,7 @@ public class MasterService {
         return buy.stream().map(BuyDTO::new).toList();
     }
 
-    //PUT 
+    //PATCH
     public BuyDTO modify(BuyDTO buyDTO){
         BuyEntity buy = new BuyEntity(buyDTO);
         return new BuyDTO(buyRepository.save(buy));
@@ -66,6 +66,7 @@ public class MasterService {
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
         setProfitValue(buyDTO.getBid(), buyDTO.getAmountCryptoPurchased(), buyDTO.getAmountSpent(), buyDTO.getTaxAmount(), buyDTO);
         buyDTO.setTotalProfit(totalProfit(buyDTO.getProfit()));
+        buyDTO.setAverageValue(average());
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
@@ -123,6 +124,11 @@ public class MasterService {
             System.err.println("Erro inesperado: " + e.getMessage());
             return BigDecimal.ZERO;
         }
+    }
+
+    public BigDecimal average(){
+        System.out.println(buyRepository.average());
+        return buyRepository.average();
     }
 
 
