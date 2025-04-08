@@ -3,10 +3,8 @@ package com.example.financeWallet.service;
 import com.example.financeWallet.dto.BuyDTO;
 import com.example.financeWallet.entity.BuyEntity;
 import com.example.financeWallet.repository.BuyRepository;
-import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class BuyService {
 
         if(dto.getCode() != null){
             currentTransaction.setCode(dto.getCode());
-            masterService.setBidValue(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
+            masterService.apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
 
         }
         return new BuyDTO(buyRepository.save(currentTransaction));
