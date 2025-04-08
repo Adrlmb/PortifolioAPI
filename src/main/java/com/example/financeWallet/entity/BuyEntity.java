@@ -35,6 +35,9 @@ public class BuyEntity {
     @Column(name = "AMOUNT_SPENT")
     private BigDecimal amountSpent; // amount used to buy crypto
 
+    @Column(name = "CRYPTO_VALUE")
+    private BigDecimal cryptoValue;
+
     @Column(name = "TAX_CODE")
     private String taxCryptoCode;
 
@@ -44,11 +47,14 @@ public class BuyEntity {
     @Column(name = "EXCHANGE")
     private String exchange;
 
-    @Column(name = "profit")
+    @Column(name = "PROFIT")
     private BigDecimal profit;
 
-    @Column(name = "Total profit")
+    @Column(name = "TOTAL_PROFIT")
     private BigDecimal totalProfit;
+
+    @Column(name = "AVERAGE_VALUE")
+    private BigDecimal averageValue;
 
     public BuyEntity(BuyDTO dto){
         BeanUtils.copyProperties(dto, this);

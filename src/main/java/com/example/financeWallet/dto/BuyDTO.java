@@ -14,12 +14,14 @@ public class BuyDTO {
     private BigDecimal bid;
     private String buyDate;
     private String amountCryptoPurchased;
+    private BigDecimal cryptoValue;
     private BigDecimal amountSpent; // amount used to buy crypto
     private String taxCryptoCode;
     private BigDecimal taxAmount;
     private String exchange;
     private BigDecimal profit;
     private BigDecimal totalProfit;
+    private BigDecimal averageValue;
 
     public BuyDTO(BuyEntity entity){
         BeanUtils.copyProperties(entity, this);
