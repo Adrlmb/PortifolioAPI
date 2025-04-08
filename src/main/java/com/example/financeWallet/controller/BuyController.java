@@ -36,9 +36,9 @@ public class BuyController {
         masterService.insert(dto);
     }
 
-    @PutMapping
-    public BuyDTO modify(@RequestBody BuyDTO dto) {
-        return buyService.modify(dto);
+    @PatchMapping("/{id}")
+    public BuyDTO modifyById(@PathVariable Long id,@RequestBody BuyDTO dto) throws IOException, InterruptedException {
+        return buyService.modifyById(id, dto);
     }
 
     @DeleteMapping("/{id}")
