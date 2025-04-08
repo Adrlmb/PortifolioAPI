@@ -1,11 +1,8 @@
 package com.example.financeWallet.service;
 import com.example.financeWallet.dto.BuyDTO;
-import com.example.financeWallet.dto.CurrencyDTO;
 import com.example.financeWallet.entity.BuyEntity;
-import com.example.financeWallet.entity.CurrencyEntity;
 import com.example.financeWallet.repository.BuyRepository;
 import com.example.financeWallet.repository.CurrencyRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -62,17 +59,20 @@ public class MasterService {
     }
 
     //POST insert
-    public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
-        setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
-        setProfitValue(buyDTO.getBid(), buyDTO.getAmountCryptoPurchased(), buyDTO.getAmountSpent(), buyDTO.getTaxAmount(), buyDTO);
-        buyDTO.setTotalProfit(totalProfit(buyDTO.getProfit()));
-        buyDTO.setAverageValue(average());
-        BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
+    public void insert(BuyDTO dto) throws IOException, InterruptedException {
+
+        dto.setBid(apiBid(dto.getCode(), dto.getCodein(), dto));
+        dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
+        dto.setTotalProfit(totalProfit(dto.getProfit()));
+        dto.setAverageValue(average());
+
+        BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
 
 
-    public void setBidValue(String code, String codein, BuyDTO buyDTO) throws IOException, InterruptedException {
+    public BigDecimal apiBid(String code, String codein, BuyDTO buyDTO) throws IOException, InterruptedException {
+
         String chave = code.toUpperCase() + codein.toUpperCase();
         String api = "https://economia.awesomeapi.com.br/last/" + code + "-" + codein;
 
@@ -84,23 +84,26 @@ public class MasterService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            JsonNode root = objectMapper.readTree(response.body())
-                    .get(chave);
+            String bid = objectMapper.readTree(response.body())
+                    .get(chave)
+                    .get("bid").asText();
 
-            BigDecimal bid = bigDecimalConverter(root.get("bid").asText());
-            buyDTO.setBid(bid.setScale(2, RoundingMode.DOWN)); // Atualiza só o campo bid
-        }else{
+            return bigDecimalConverter(bid).setScale(2, RoundingMode.DOWN); // Converte a string bid em bigDecimal e fixa em apenas 2 casas decimais.
+        }else {
             System.out.println("Erro ao buscar cotação");
+            return null;
         }
     }
 
-    public void setProfitValue(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
+    public BigDecimal profitCalculation(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
+
         BigDecimal mult = currentValue.multiply(bigDecimalConverter(amountCrypto));
         BigDecimal cost = amountSpent.add(taxAmount);
-        buyDTO.setProfit(mult.subtract(cost));
+        return (mult.subtract(cost));
     }
 
     public BigDecimal bigDecimalConverter(String value){
+
         try{
             if(value == null || value.isBlank()){
                 return BigDecimal.ZERO;
@@ -114,6 +117,7 @@ public class MasterService {
     }
 
     public BigDecimal totalProfit(BigDecimal profit){
+
         try{
             BigDecimal total = buyRepository.sumProfit();
             return total != null ? total : profit;
@@ -127,6 +131,7 @@ public class MasterService {
     }
 
     public BigDecimal average(){
+
         System.out.println(buyRepository.average());
         return buyRepository.average();
     }
