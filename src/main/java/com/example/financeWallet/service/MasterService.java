@@ -16,6 +16,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -53,11 +55,11 @@ public class MasterService {
     }
 
     //DELETE
-    public void delete(Long id){
+    public void delete(Long id) {
         BuyEntity buy = buyRepository.findById(id).get();
         buyRepository.delete(buy);
+    }
 
-    
     //POST insert
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
@@ -91,7 +93,7 @@ public class MasterService {
 
     public void setProfitValue(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
         BigDecimal mult = currentValue.multiply(bigDecimalConverter(amountCrypto));
-        BigDeciml cost = amountSpent.add(taxAmount);
+        BigDecimal cost = amountSpent.add(taxAmount);
         buyDTO.setProfit(mult.subtract(cost));
     }
 
