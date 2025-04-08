@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +39,14 @@ public class BuyService {
         BuyEntity currentTransaction = buyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
+        if(dto.getCodein() != null){
+            currentTransaction.setCodein(dto.getCodein());
+        }
+
         if(dto.getCode() != null){
             currentTransaction.setCode(dto.getCode());
-            masterService.apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
+            BigDecimal updatedBid = masterService.apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
+            currentTransaction.setBid(updatedBid);
 
         }
         return new BuyDTO(buyRepository.save(currentTransaction));
@@ -49,9 +55,5 @@ public class BuyService {
     public void delete(Long id) {
         BuyEntity buy = buyRepository.findById(id).get();
         buyRepository.delete(buy);
-    }
-
-    public BuyDTO findById(Long id) {
-        return new BuyDTO(buyRepository.findById(id).get());
     }
 }
