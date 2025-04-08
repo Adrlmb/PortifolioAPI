@@ -8,6 +8,7 @@ import com.example.financeWallet.repository.CurrencyRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -64,6 +65,7 @@ public class MasterService {
     public void insert(BuyDTO buyDTO) throws IOException, InterruptedException {
         setBidValue(buyDTO.getCode(), buyDTO.getCodein(), buyDTO);
         setProfitValue(buyDTO.getBid(), buyDTO.getAmountCryptoPurchased(), buyDTO.getAmountSpent(), buyDTO.getTaxAmount(), buyDTO);
+        buyDTO.setTotalProfit(totalProfit(buyDTO.getProfit()));
         BuyEntity buyEntity = new BuyEntity(buyDTO);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
@@ -106,6 +108,19 @@ public class MasterService {
             }
         }catch (NullPointerException e){
             System.out.println("Erro ao converter");
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal totalProfit(BigDecimal profit){
+        try{
+            BigDecimal total = buyRepository.sumProfit();
+            return total != null ? total : profit;
+        }catch (DataAccessException e){
+            System.err.println("Erro ao acessar o banco de dados: " + e.getMessage());
+            return BigDecimal.ZERO;
+        }catch (Exception e){
+            System.err.println("Erro inesperado: " + e.getMessage());
             return BigDecimal.ZERO;
         }
     }

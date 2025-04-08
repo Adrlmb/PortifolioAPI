@@ -47,6 +47,9 @@ public class BuyEntity {
     @Column(name = "profit")
     private BigDecimal profit;
 
+    @Column(name = "Total profit")
+    private BigDecimal totalProfit;
+
     public BuyEntity(BuyDTO dto){
         BeanUtils.copyProperties(dto, this);
     }

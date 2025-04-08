@@ -19,6 +19,7 @@ public class BuyDTO {
     private BigDecimal taxAmount;
     private String exchange;
     private BigDecimal profit;
+    private BigDecimal totalProfit;
 
     public BuyDTO(BuyEntity entity){
         BeanUtils.copyProperties(entity, this);
