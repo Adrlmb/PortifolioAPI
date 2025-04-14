@@ -1,8 +1,8 @@
-package com.example.financeWallet.service;
-import com.example.financeWallet.dto.BuyDTO;
-import com.example.financeWallet.entity.BuyEntity;
-import com.example.financeWallet.repository.BuyRepository;
-import com.example.financeWallet.repository.CurrencyRepository;
+package com.example.portfolioAPI.service;
+import com.example.portfolioAPI.dto.BuyDTO;
+import com.example.portfolioAPI.entity.BuyEntity;
+import com.example.portfolioAPI.repository.BuyRepository;
+import com.example.portfolioAPI.repository.CurrencyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

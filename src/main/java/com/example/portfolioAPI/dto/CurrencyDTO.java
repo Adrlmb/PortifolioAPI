@@ -1,6 +1,6 @@
-package com.example.financeWallet.dto;
+package com.example.portfolioAPI.dto;
 
-import com.example.financeWallet.entity.CurrencyEntity;
+import com.example.portfolioAPI.entity.CurrencyEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

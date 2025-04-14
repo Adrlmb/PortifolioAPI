@@ -1,7 +1,7 @@
-package com.example.financeWallet.controller;
+package com.example.portfolioAPI.controller;
 
-import com.example.financeWallet.dto.CurrencyDTO;
-import com.example.financeWallet.service.CurrencyService;
+import com.example.portfolioAPI.dto.CurrencyDTO;
+import com.example.portfolioAPI.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

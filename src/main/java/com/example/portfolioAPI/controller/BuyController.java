@@ -1,8 +1,8 @@
-package com.example.financeWallet.controller;
+package com.example.portfolioAPI.controller;
 
-import com.example.financeWallet.dto.BuyDTO;
-import com.example.financeWallet.service.BuyService;
-import com.example.financeWallet.service.MasterService;
+import com.example.portfolioAPI.dto.BuyDTO;
+import com.example.portfolioAPI.service.BuyService;
+import com.example.portfolioAPI.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

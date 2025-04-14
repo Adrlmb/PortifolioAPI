@@ -1,6 +1,6 @@
-package com.example.financeWallet.entity;
+package com.example.portfolioAPI.entity;
 
-import com.example.financeWallet.dto.BuyDTO;
+import com.example.portfolioAPI.dto.BuyDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

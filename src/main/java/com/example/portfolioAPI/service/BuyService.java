@@ -1,8 +1,8 @@
-package com.example.financeWallet.service;
+package com.example.portfolioAPI.service;
 
-import com.example.financeWallet.dto.BuyDTO;
-import com.example.financeWallet.entity.BuyEntity;
-import com.example.financeWallet.repository.BuyRepository;
+import com.example.portfolioAPI.dto.BuyDTO;
+import com.example.portfolioAPI.entity.BuyEntity;
+import com.example.portfolioAPI.repository.BuyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

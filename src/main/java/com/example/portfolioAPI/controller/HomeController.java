@@ -1,4 +1,4 @@
-package com.example.financeWallet.controller;
+package com.example.portfolioAPI.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,9 +1,11 @@
-package com.example.financeWallet.dto;
-import com.example.financeWallet.entity.BuyEntity;
-import lombok.*;
+package com.example.portfolioAPI.dto;
+
+import com.example.portfolioAPI.entity.BuyEntity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @NoArgsConstructor // because already have a constructor created
 @Data
