@@ -2,8 +2,8 @@ package com.example.portfolioAPI.service;
 import com.example.portfolioAPI.dto.BuyDTO;
 import com.example.portfolioAPI.entity.BuyEntity;
 import com.example.portfolioAPI.repository.BuyRepository;
-import com.example.portfolioAPI.repository.CurrencyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,46 +21,51 @@ import java.util.Optional;
 @Service
 public class MasterService {
 
-    private final CurrencyRepository currencyRepository;
     private final BuyRepository buyRepository;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public MasterService(CurrencyRepository currencyRepository, BuyRepository buyRepository){
-        this.currencyRepository = currencyRepository;
+    public MasterService(BuyRepository buyRepository){
         this.buyRepository = buyRepository;
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
     }
 
-    //GET list all
     public List<BuyDTO> listAll(){
         List<BuyEntity> buy = buyRepository.findAll();
         return buy.stream().map(BuyDTO::new).toList();
     }
 
-    //GET list by id
     public List<BuyDTO> listByID(Long id){
         Optional<BuyEntity> buy = buyRepository.findById(id);
         return buy.stream().map(BuyDTO::new).toList();
     }
 
-    //PATCH
-    public BuyDTO modify(BuyDTO buyDTO){
-        BuyEntity buy = new BuyEntity(buyDTO);
-        return new BuyDTO(buyRepository.save(buy));
+    @Transactional
+    public BuyDTO modifyById(Long id, BuyDTO dto) throws IOException, InterruptedException {
+        BuyEntity currentTransaction = buyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        if(dto.getCodein() != null){
+            currentTransaction.setCodein(dto.getCodein());
+        }
+
+        if(dto.getCode() != null){
+            currentTransaction.setCode(dto.getCode());
+            BigDecimal updatedBid = apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
+            currentTransaction.setBid(updatedBid);
+
+        }
+        return new BuyDTO(buyRepository.save(currentTransaction));
     }
 
-    //DELETE
     public void delete(Long id) {
         BuyEntity buy = buyRepository.findById(id).get();
         buyRepository.delete(buy);
     }
 
-    //POST insert
     public void insert(BuyDTO dto) throws IOException, InterruptedException {
-
         dto.setBid(apiBid(dto.getCode(), dto.getCodein(), dto));
         dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
         dto.setTotalProfit(totalProfit(dto.getProfit()));
@@ -70,9 +75,7 @@ public class MasterService {
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
 
-
     public BigDecimal apiBid(String code, String codein, BuyDTO buyDTO) throws IOException, InterruptedException {
-
         String chave = code.toUpperCase() + codein.toUpperCase();
         String api = "https://economia.awesomeapi.com.br/last/" + code + "-" + codein;
 
@@ -96,14 +99,12 @@ public class MasterService {
     }
 
     public BigDecimal profitCalculation(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
-
         BigDecimal mult = currentValue.multiply(bigDecimalConverter(amountCrypto));
         BigDecimal cost = amountSpent.add(taxAmount);
         return (mult.subtract(cost));
     }
 
     public BigDecimal bigDecimalConverter(String value){
-
         try{
             if(value == null || value.isBlank()){
                 return BigDecimal.ZERO;
@@ -117,7 +118,6 @@ public class MasterService {
     }
 
     public BigDecimal totalProfit(BigDecimal profit){
-
         try{
             BigDecimal total = buyRepository.sumProfit();
             return total != null ? total : profit;
@@ -131,7 +131,6 @@ public class MasterService {
     }
 
     public BigDecimal average(){
-
         System.out.println(buyRepository.average());
         return buyRepository.average();
     }
