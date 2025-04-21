@@ -55,8 +55,19 @@ public class MasterService {
             currentTransaction.setCode(dto.getCode());
             BigDecimal updatedBid = apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
             currentTransaction.setBid(updatedBid);
-
         }
+
+        //se não for nulo pega os dados do dto e altera o bd
+        Optional.ofNullable(dto.getCodein()).ifPresent(currentTransaction::setCodein);
+        Optional.ofNullable(dto.getBuyDate()).ifPresent(currentTransaction::setBuyDate);
+        Optional.ofNullable(dto.getAmountCryptoPurchased()).ifPresent(currentTransaction::setAmountCryptoPurchased);
+        Optional.ofNullable(dto.getCryptoValue()).ifPresent(currentTransaction::setCryptoValue);
+        Optional.ofNullable(dto.getAmountSpent()).ifPresent(currentTransaction::setAmountSpent);
+        Optional.ofNullable(dto.getTaxCryptoCode()).ifPresent(currentTransaction::setTaxCryptoCode);
+        Optional.ofNullable(dto.getTaxAmount()).ifPresent(currentTransaction::setTaxAmount);
+        Optional.ofNullable(dto.getExchange()).ifPresent(currentTransaction::setExchange);
+        Optional.ofNullable(dto.getProfit()).ifPresent(currentTransaction::setProfit);
+
         return new BuyDTO(buyRepository.save(currentTransaction));
     }
 
