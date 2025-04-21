@@ -1,7 +1,6 @@
 package com.example.portfolioAPI.controller;
 
 import com.example.portfolioAPI.dto.BuyDTO;
-import com.example.portfolioAPI.service.BuyService;
 import com.example.portfolioAPI.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +14,16 @@ import java.util.List;
 public class BuyController {
 
     @Autowired
-    private BuyService buyService;
-
-    @Autowired
     private MasterService masterService;
-
 
     @GetMapping
     public List<BuyDTO> listALl() {
-        return buyService.listAll();
+        return masterService.listAll();
     }
 
     @GetMapping("/{id}")
     public List<BuyDTO> listByID(@PathVariable("id") Long id) {
-        return buyService.listByID(id);
+        return masterService.listByID(id);
     }
 
     @PostMapping
@@ -38,12 +33,12 @@ public class BuyController {
 
     @PatchMapping("/{id}")
     public BuyDTO modifyById(@PathVariable Long id,@RequestBody BuyDTO dto) throws IOException, InterruptedException {
-        return buyService.modifyById(id, dto);
+        return masterService.modifyById(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        buyService.delete(id);
+        masterService.delete(id);
         return ResponseEntity.ok().build();
     }
 
