@@ -43,7 +43,9 @@ public class CsvService {
                 CsvEntity entity = new CsvEntity();
                 entity.setBuyDate(linha[0]);
                 entity.setCode(linha[1]);
-                entity.setCryptoValue(linha[3]);
+
+                String price = linha[3].replace(",",""); //retira a virgula da string
+                entity.setCryptoValue(masterService.bigDecimalConverter(price));
                 entity.setAmountCryptoPurchased(linha[4]);
                 entity.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
                 entity.setTaxCryptoCode(linha[7]);
