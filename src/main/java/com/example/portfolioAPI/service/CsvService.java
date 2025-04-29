@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class CsvService {
             String lastCode = null;
             String lastCodein = null;
             BigDecimal lastBid = null;
-
             boolean primeiraLinha = true;
+
             while ((linha = reader.readNext()) != null) {
                 if (primeiraLinha) {
                     primeiraLinha = false; // Pular cabeçalho
@@ -51,18 +52,15 @@ public class CsvService {
                 dto.setCodein(linha[7]);
                 dto.setBuyDate(linha[0]);
 
-                BigDecimal bid;
                 if(dto.getCode().equals(lastCode) && dto.getCodein().equals(lastCodein)){
-                    bid = lastBid;
+                    dto.setBid(lastBid);
                 }else {
-                    bid = masterService.apiBid(dto.getCode(), dto.getCodein());
+                    BigDecimal bid = masterService.apiBid(dto.getCode(), dto.getCodein());
+                    dto.setBid(bid);
                     lastCode = dto.getCode();
                     lastCodein = dto.getCodein();;
                     lastBid = bid;
                 }
-                dto.setBid(bid);
-
-                //dto.setBid(masterService.apiBid(dto.getCode(), dto.getCodein()));
 
                 String price = linha[3].replace(",",""); //retira a virgula da string
                 dto.setCryptoValue(masterService.bigDecimalConverter(price));
@@ -70,8 +68,8 @@ public class CsvService {
                 dto.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
                 dto.setTaxCryptoCode(linha[7]);
 
-                CsvEntity entity = new CsvEntity(dto);
-                transacoes.add(entity);
+
+                transacoes.add(new CsvEntity(dto));
             }
 
             csvRepository.saveAll(transacoes);
@@ -79,5 +77,22 @@ public class CsvService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
         }
+    }
+
+    public BigDecimal setBid (String code, String codein) throws IOException, InterruptedException {
+        String lastCode = null;
+        String lastCodein = null;
+        BigDecimal lastBid = null;
+        BigDecimal bid;
+
+        if(code.equals(lastCode) && codein.equals(lastCodein)){
+            bid = lastBid;
+        }else {
+            bid = masterService.apiBid(code, codein);
+            lastCode = code;
+            lastCodein = codein;
+            lastBid = bid;
+        }
+        return bid;
     }
 }
