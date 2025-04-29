@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class CsvService {
             List<CsvEntity> transacoes = new ArrayList<>();
 
             String[] linha;
+            String lastCode = null;
+            String lastCodein = null;
+            BigDecimal lastBid = null;
+
             boolean primeiraLinha = true;
             while ((linha = reader.readNext()) != null) {
                 if (primeiraLinha) {
@@ -40,16 +45,32 @@ public class CsvService {
                     continue;
                 }
 
-                CsvEntity entity = new CsvEntity();
-                entity.setBuyDate(linha[0]);
-                entity.setCode(linha[1]);
+                CsvDTO dto = new CsvDTO();
+
+                dto.setCode(linha[1]);
+                dto.setCodein(linha[7]);
+                dto.setBuyDate(linha[0]);
+
+                BigDecimal bid;
+                if(dto.getCode().equals(lastCode) && dto.getCodein().equals(lastCodein)){
+                    bid = lastBid;
+                }else {
+                    bid = masterService.apiBid(dto.getCode(), dto.getCodein());
+                    lastCode = dto.getCode();
+                    lastCodein = dto.getCodein();;
+                    lastBid = bid;
+                }
+                dto.setBid(bid);
+
+                //dto.setBid(masterService.apiBid(dto.getCode(), dto.getCodein()));
 
                 String price = linha[3].replace(",",""); //retira a virgula da string
-                entity.setCryptoValue(masterService.bigDecimalConverter(price));
-                entity.setAmountCryptoPurchased(linha[4]);
-                entity.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
-                entity.setTaxCryptoCode(linha[7]);
+                dto.setCryptoValue(masterService.bigDecimalConverter(price));
+                dto.setAmountCryptoPurchased(linha[4]);
+                dto.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
+                dto.setTaxCryptoCode(linha[7]);
 
+                CsvEntity entity = new CsvEntity(dto);
                 transacoes.add(entity);
             }
 
