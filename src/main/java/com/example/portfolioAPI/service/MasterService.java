@@ -53,7 +53,7 @@ public class MasterService {
 
         if(dto.getCode() != null){
             currentTransaction.setCode(dto.getCode());
-            BigDecimal updatedBid = apiBid(currentTransaction.getCode(), currentTransaction.getCodein(), dto);
+            BigDecimal updatedBid = apiBid(currentTransaction.getCode(), currentTransaction.getCodein());
             currentTransaction.setBid(updatedBid);
         }
 
@@ -77,7 +77,7 @@ public class MasterService {
     }
 
     public void insert(BuyDTO dto) throws IOException, InterruptedException {
-        dto.setBid(apiBid(dto.getCode(), dto.getCodein(), dto));
+        dto.setBid(apiBid(dto.getCode(), dto.getCodein()));
         dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
         dto.setTotalProfit(totalProfit(dto.getProfit()));
         dto.setAverageValue(average());
@@ -86,7 +86,7 @@ public class MasterService {
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
 
-    public BigDecimal apiBid(String code, String codein, BuyDTO buyDTO) throws IOException, InterruptedException {
+    public BigDecimal apiBid(String code, String codein) throws IOException, InterruptedException {
         String chave = code.toUpperCase() + codein.toUpperCase();
         String api = "https://economia.awesomeapi.com.br/last/" + code + "-" + codein;
 
