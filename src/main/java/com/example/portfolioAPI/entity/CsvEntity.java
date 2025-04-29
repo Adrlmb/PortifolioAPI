@@ -35,7 +35,7 @@ public class CsvEntity {
     private BigDecimal amountSpent; // amount used to buy crypto
 
     @Column(name = "CRYPTO_VALUE")
-    private String cryptoValue;
+    private BigDecimal cryptoValue;
 
     @Column(name = "TAX_CODE")
     private String taxCryptoCode;
