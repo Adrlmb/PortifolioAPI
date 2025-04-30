@@ -98,10 +98,10 @@ public class MasterService {
     }
 
     public void insert(BuyDTO dto) throws IOException, InterruptedException {
-        dto.setBid(apiBid(dto.getCode(), dto.getCodein()));
-        dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
-        dto.setTotalProfit(totalProfit(dto.getProfit()));
-        dto.setAverageValue(average());
+        //dto.setBid(apiBid(dto.getCode(), dto.getCodein()));
+        //dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
+        //dto.setTotalProfit(totalProfit(dto.getProfit()));
+        //dto.setAverageValue(average());
 
         BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
