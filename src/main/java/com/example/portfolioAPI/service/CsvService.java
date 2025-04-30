@@ -30,6 +30,27 @@ public class CsvService {
         return csv.stream().map(CsvDTO::new).toList();
     }
 
+    public void updateBid() throws IOException, InterruptedException {
+        List<CsvEntity> entity = csvRepository.findAll();
+        String lastCode = null;
+        String lastCodein = null;
+        BigDecimal lastBid = null;
+
+        for(CsvEntity row : entity){
+            if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
+                row.setBid(lastBid);
+            }else {
+                BigDecimal bid = masterService.apiBid(row.getCode(), row.getCodein());
+                row.setBid(bid);
+                lastCode = row.getCode();
+                lastCodein = row.getCodein();;
+                lastBid = bid;
+            }
+        }
+
+        csvRepository.saveAll(entity);
+    }
+
     public void importarCSV(MultipartFile file) {
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             List<CsvEntity> transacoes = new ArrayList<>();
