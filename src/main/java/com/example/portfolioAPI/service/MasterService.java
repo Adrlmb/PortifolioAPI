@@ -42,6 +42,27 @@ public class MasterService {
         return buy.stream().map(BuyDTO::new).toList();
     }
 
+    public void updateBid() throws IOException, InterruptedException {
+        List<BuyEntity> entity = buyRepository.findAll();
+        String lastCode = null;
+        String lastCodein = null;
+        BigDecimal lastBid = null;
+
+        for(BuyEntity row : entity){
+
+            if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
+                row.setBid(lastBid);
+            }else {
+                BigDecimal bid = apiBid(row.getCode(), row.getCodein());
+                row.setBid(bid);
+                lastCode = row.getCode();
+                lastCodein = row.getCodein();;
+                lastBid = bid;
+            }
+        }
+        buyRepository.saveAll(entity);
+    }
+
     @Transactional
     public BuyDTO modifyById(Long id, BuyDTO dto) throws IOException, InterruptedException {
         BuyEntity currentTransaction = buyRepository.findById(id)
