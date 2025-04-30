@@ -25,7 +25,8 @@ public class CsvService {
         this.csvRepository = csvRepository;
     }
 
-    public List<CsvDTO> listAll(){
+    public List<CsvDTO> listAll() throws IOException, InterruptedException {
+        updateBid();
         List<CsvEntity> csv = csvRepository.findAll();
         return csv.stream().map(CsvDTO::new).toList();
     }
