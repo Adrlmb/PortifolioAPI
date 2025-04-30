@@ -167,6 +167,41 @@ public class MasterService {
         return buyRepository.average();
     }
 
+    //falta alterar
+    public void importarCSV(MultipartFile file) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
+            List<BuyEntity> buyEntity = new ArrayList<>();
+
+            String[] linha;
+            boolean primeiraLinha = true;
+
+            while ((linha = reader.readNext()) != null) {
+                if (primeiraLinha) {
+                    primeiraLinha = false; // Pular cabeçalho
+                    continue;
+                }
+
+                BuyDTO dto = new BuyDTO();
+
+                dto.setCode(linha[1]);
+                dto.setCodein(linha[7]);
+                dto.setBuyDate(linha[0]);
+                String price = linha[3].replace(",",""); //retira a virgula da string
+                dto.setCryptoValue(bigDecimalConverter(price));
+                dto.setAmountCryptoPurchased(linha[4]);
+                dto.setTaxAmount(bigDecimalConverter(linha[6]));
+                dto.setTaxCryptoCode(linha[7]);
+
+                buyEntity.add(new BuyEntity(dto));
+            }
+
+            buyRepository.saveAll(buyEntity);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
+        }
+    }
+
 
 // grava os dados da api em um dto com os campos identicos
 //    public CurrencyDTO cryptoAPi (String code, String codein) throws IOException, InterruptedException {
