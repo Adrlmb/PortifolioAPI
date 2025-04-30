@@ -55,11 +55,7 @@ public class CsvService {
     public void importarCSV(MultipartFile file) {
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             List<CsvEntity> transacoes = new ArrayList<>();
-
             String[] linha;
-            String lastCode = null;
-            String lastCodein = null;
-            BigDecimal lastBid = null;
             boolean primeiraLinha = true;
 
             while ((linha = reader.readNext()) != null) {
@@ -73,23 +69,11 @@ public class CsvService {
                 dto.setCode(linha[1]);
                 dto.setCodein(linha[7]);
                 dto.setBuyDate(linha[0]);
-
-                if(dto.getCode().equals(lastCode) && dto.getCodein().equals(lastCodein)){
-                    dto.setBid(lastBid);
-                }else {
-                    BigDecimal bid = masterService.apiBid(dto.getCode(), dto.getCodein());
-                    dto.setBid(bid);
-                    lastCode = dto.getCode();
-                    lastCodein = dto.getCodein();;
-                    lastBid = bid;
-                }
-
                 String price = linha[3].replace(",",""); //retira a virgula da string
                 dto.setCryptoValue(masterService.bigDecimalConverter(price));
                 dto.setAmountCryptoPurchased(linha[4]);
                 dto.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
                 dto.setTaxCryptoCode(linha[7]);
-
 
                 transacoes.add(new CsvEntity(dto));
             }
@@ -99,22 +83,5 @@ public class CsvService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
         }
-    }
-
-    public BigDecimal setBid (String code, String codein) throws IOException, InterruptedException {
-        String lastCode = null;
-        String lastCodein = null;
-        BigDecimal lastBid = null;
-        BigDecimal bid;
-
-        if(code.equals(lastCode) && codein.equals(lastCodein)){
-            bid = lastBid;
-        }else {
-            bid = masterService.apiBid(code, codein);
-            lastCode = code;
-            lastCodein = codein;
-            lastBid = bid;
-        }
-        return bid;
     }
 }
