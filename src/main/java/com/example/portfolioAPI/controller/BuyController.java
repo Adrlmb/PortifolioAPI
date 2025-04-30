@@ -17,7 +17,7 @@ public class BuyController {
     private MasterService masterService;
 
     @GetMapping
-    public List<BuyDTO> listALl() {
+    public List<BuyDTO> listALl() throws IOException, InterruptedException {
         return masterService.listAll();
     }
 
