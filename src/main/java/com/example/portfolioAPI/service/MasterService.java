@@ -32,7 +32,8 @@ public class MasterService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public List<BuyDTO> listAll(){
+    public List<BuyDTO> listAll() throws IOException, InterruptedException {
+        updateBid();
         List<BuyEntity> buy = buyRepository.findAll();
         return buy.stream().map(BuyDTO::new).toList();
     }
