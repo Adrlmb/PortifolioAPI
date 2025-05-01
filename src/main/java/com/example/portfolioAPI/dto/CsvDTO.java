@@ -16,7 +16,7 @@ public class CsvDTO {
     private BigDecimal bid;
     private String buyDate;
     private String amountCryptoPurchased;
-    private BigDecimal cryptoValue;
+    private String cryptoValue;
     private BigDecimal amountSpent; // amount used to buy crypto
     private String taxCryptoCode;
     private BigDecimal taxAmount;
