@@ -4,16 +4,17 @@ import com.example.portfolioAPI.dto.CsvDTO;
 import com.example.portfolioAPI.entity.CsvEntity;
 import com.example.portfolioAPI.repository.CsvRepository;
 import com.opencsv.CSVReader;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 public class CsvService {
 
@@ -31,15 +32,23 @@ public class CsvService {
         String lastCode = null;
         String lastCodein = null;
         BigDecimal lastBid = null;
+        BigDecimal profitLoss = null;
 
         for(CsvEntity row : entity){
             if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
+                profitLoss = (profit(row.getAmountCryptoPurchased(), lastBid, row.getAmountSpent()));
+
                 row.setBid(lastBid);
+                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
             }else {
                 BigDecimal bid = masterService.apiBid(row.getCode(), row.getCodein());
+                profitLoss = (profit(row.getAmountCryptoPurchased(), bid, row.getAmountSpent()));
+
+                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
                 row.setBid(bid);
+
                 lastCode = row.getCode();
-                lastCodein = row.getCodein();;
+                lastCodein = row.getCodein();
                 lastBid = bid;
             }
         }
