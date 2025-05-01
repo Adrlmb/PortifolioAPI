@@ -71,7 +71,7 @@ public class CsvService {
                 dto.setBuyDate(linha[0]);
                 dto.setCryptoValue(linha[3]);
                 dto.setAmountCryptoPurchased(linha[4]);
-                dto.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
+                dto.setTaxAmount(fee);
                 dto.setTaxCryptoCode(linha[7]);
 
                 transacoes.add(new CsvEntity(dto));
