@@ -65,6 +65,8 @@ public class CsvService {
                 }
 
                 CsvDTO dto = new CsvDTO();
+                BigDecimal fee = masterService.bigDecimalConverter(linha[6]);
+                BigDecimal totalValue = masterService.bigDecimalConverter(linha[5]);
 
                 dto.setCode(linha[1]);
                 dto.setCodein(linha[7]);
