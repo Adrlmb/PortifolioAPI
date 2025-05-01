@@ -1,7 +1,8 @@
 package com.example.portfolioAPI.service;
 
-import com.example.portfolioAPI.dto.CsvDTO;
-import com.example.portfolioAPI.entity.CsvEntity;
+import com.example.portfolioAPI.dto.BuyDTO;
+import com.example.portfolioAPI.entity.BuyEntity;
+import com.example.portfolioAPI.repository.BuyRepository;
 import com.example.portfolioAPI.repository.CsvRepository;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +21,22 @@ public class CsvService {
 
     private final CsvRepository csvRepository;
     private final MasterService masterService;
+    private final BuyRepository buyRepository;
 
-    public List<CsvDTO> listAll() throws IOException, InterruptedException {
+    public List<BuyDTO> listAll() throws IOException, InterruptedException {
         updateBid();
-        List<CsvEntity> csv = csvRepository.findAll();
-        return csv.stream().map(CsvDTO::new).toList();
+        List<BuyEntity> csv = buyRepository.findAll();
+        return csv.stream().map(BuyDTO::new).toList();
     }
 
     public void updateBid() throws IOException, InterruptedException {
-        List<CsvEntity> entity = csvRepository.findAll();
+        List<BuyEntity> entity = buyRepository.findAll();
         String lastCode = null;
         String lastCodein = null;
         BigDecimal lastBid = null;
         BigDecimal profitLoss = null;
 
-        for(CsvEntity row : entity){
+        for(BuyEntity row : entity){
             if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
                 profitLoss = (profit(row.getAmountCryptoPurchased(), lastBid, row.getAmountSpent()));
 
@@ -53,12 +55,12 @@ public class CsvService {
             }
         }
 
-        csvRepository.saveAll(entity);
+        buyRepository.saveAll(entity);
     }
 
     public void importarCSV(MultipartFile file) {
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
-            List<CsvEntity> transacoes = new ArrayList<>();
+            List<BuyEntity> transacoes = new ArrayList<>();
             String[] linha;
             boolean primeiraLinha = true;
 
@@ -68,23 +70,25 @@ public class CsvService {
                     continue;
                 }
 
-                CsvDTO dto = new CsvDTO();
+                BuyDTO dto = new BuyDTO();
                 BigDecimal fee = masterService.bigDecimalConverter(linha[6]);
                 BigDecimal totalValue = masterService.bigDecimalConverter(linha[5]);
+                String cryptoValue = linha[3].replace(",","");
+                BigDecimal price = masterService.bigDecimalConverter(cryptoValue);
 
                 dto.setCode(linha[1]);
                 dto.setCodein(linha[7]);
                 dto.setBuyDate(linha[0]);
-                dto.setCryptoValue(linha[3]);
+                dto.setCryptoValue(price);
                 dto.setAmountCryptoPurchased(linha[4]);
                 dto.setTaxAmount(fee);
                 dto.setTaxCryptoCode(linha[7]);
                 dto.setAmountSpent(fee.add(totalValue));
 
-                transacoes.add(new CsvEntity(dto));
+                transacoes.add(new BuyEntity(dto));
             }
 
-            csvRepository.saveAll(transacoes);
+            buyRepository.saveAll(transacoes);
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
