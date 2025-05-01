@@ -84,4 +84,9 @@ public class CsvService {
             throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
         }
     }
+
+    public BigDecimal profit(String amount, BigDecimal currentPrice, BigDecimal totalSpent){
+        BigDecimal amountBrought = masterService.bigDecimalConverter(amount);
+    return amountBrought.multiply(currentPrice).subtract(totalSpent);
+    }
 }
