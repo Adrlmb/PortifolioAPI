@@ -4,22 +4,18 @@ import com.example.portfolioAPI.dto.BuyDTO;
 import com.example.portfolioAPI.entity.BuyEntity;
 import com.example.portfolioAPI.repository.BuyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencsv.CSVReader;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,16 +50,23 @@ public class MasterService {
         String lastCode = null;
         String lastCodein = null;
         BigDecimal lastBid = null;
+        BigDecimal profitLoss = null;
 
         for(BuyEntity row : entity){
-
             if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
+                profitLoss = (profit(row.getAmountCryptoPurchased(), lastBid, row.getAmountSpent()));
+
                 row.setBid(lastBid);
+                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
             }else {
                 BigDecimal bid = apiBid(row.getCode(), row.getCodein());
+                profitLoss = (profit(row.getAmountCryptoPurchased(), bid, row.getAmountSpent()));
+
+                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
                 row.setBid(bid);
+
                 lastCode = row.getCode();
-                lastCodein = row.getCodein();;
+                lastCodein = row.getCodein();
                 lastBid = bid;
             }
         }
@@ -137,10 +140,9 @@ public class MasterService {
         }
     }
 
-    public BigDecimal profitCalculation(BigDecimal currentValue, String amountCrypto, BigDecimal amountSpent, BigDecimal taxAmount, BuyDTO buyDTO){
-        BigDecimal mult = currentValue.multiply(bigDecimalConverter(amountCrypto));
-        BigDecimal cost = amountSpent.add(taxAmount);
-        return (mult.subtract(cost));
+    public BigDecimal profit(String amount, BigDecimal currentPrice, BigDecimal totalSpent){
+        BigDecimal amountBrought = bigDecimalConverter(amount);
+        return amountBrought.multiply(currentPrice).subtract(totalSpent);
     }
 
     public BigDecimal bigDecimalConverter(String value){
@@ -173,66 +175,4 @@ public class MasterService {
         System.out.println(buyRepository.average());
         return buyRepository.average();
     }
-
-    //falta alterar
-    public void importarCSV(MultipartFile file) {
-        try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
-            List<BuyEntity> buyEntity = new ArrayList<>();
-
-            String[] linha;
-            boolean primeiraLinha = true;
-
-            while ((linha = reader.readNext()) != null) {
-                if (primeiraLinha) {
-                    primeiraLinha = false; // Pular cabeçalho
-                    continue;
-                }
-
-                BuyDTO dto = new BuyDTO();
-
-                dto.setCode(linha[1]);
-                dto.setCodein(linha[7]);
-                dto.setBuyDate(linha[0]);
-                String price = linha[3].replace(",",""); //retira a virgula da string
-                dto.setCryptoValue(bigDecimalConverter(price));
-                dto.setAmountCryptoPurchased(linha[4]);
-                dto.setTaxAmount(bigDecimalConverter(linha[6]));
-                dto.setTaxCryptoCode(linha[7]);
-
-                buyEntity.add(new BuyEntity(dto));
-            }
-
-            buyRepository.saveAll(buyEntity);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
-        }
-    }
-
-
-// grava os dados da api em um dto com os campos identicos
-//    public CurrencyDTO cryptoAPi (String code, String codein) throws IOException, InterruptedException {
-//        code = code.toUpperCase();
-//        codein = codein.toUpperCase();
-//        String apiUrl = "https://economia.awesomeapi.com.br/last/"+ code +"-"+ codein;
-//
-//        //Configuração do HttpClient
-//        HttpRequest request = HttpRequest.newBuilder()
-//                .uri(URI.create(apiUrl))
-//                .GET()
-//                .build();
-//
-//        //Enviando a requisição e obtendo a resposta
-//        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-//
-//
-//        if (response.statusCode() == 200) {
-//            //Extraindo o objeto USDBRL do JSON
-//            return objectMapper.readTree(response.body())
-//                    .get(code + codein)
-//                    .traverse(objectMapper)
-//                    .readValueAs(CurrencyDTO.class);
-//        }
-//       return null;
-//    }
 }
