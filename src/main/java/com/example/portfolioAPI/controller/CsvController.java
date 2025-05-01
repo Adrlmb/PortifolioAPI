@@ -1,6 +1,6 @@
 package com.example.portfolioAPI.controller;
 
-import com.example.portfolioAPI.dto.CsvDTO;
+import com.example.portfolioAPI.dto.BuyDTO;
 import com.example.portfolioAPI.repository.CsvRepository;
 import com.example.portfolioAPI.service.CsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CsvController {
     }
 
     @GetMapping
-    public List<CsvDTO> listALl() throws IOException, InterruptedException {
+    public List<BuyDTO> listALl() throws IOException, InterruptedException {
         return csvService.listAll();
     }
 
