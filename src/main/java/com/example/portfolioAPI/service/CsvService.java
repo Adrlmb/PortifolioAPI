@@ -69,8 +69,7 @@ public class CsvService {
                 dto.setCode(linha[1]);
                 dto.setCodein(linha[7]);
                 dto.setBuyDate(linha[0]);
-                String price = linha[3].replace(",",""); //retira a virgula da string
-                dto.setCryptoValue(masterService.bigDecimalConverter(price));
+                dto.setCryptoValue(linha[3]);
                 dto.setAmountCryptoPurchased(linha[4]);
                 dto.setTaxAmount(masterService.bigDecimalConverter(linha[6]));
                 dto.setTaxCryptoCode(linha[7]);
