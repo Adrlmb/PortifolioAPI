@@ -17,13 +17,8 @@ import java.util.List;
 @Service
 public class CsvService {
 
-    CsvRepository csvRepository;
-    @Autowired
-    private  MasterService masterService;
-
-    public CsvService(CsvRepository csvRepository){
-        this.csvRepository = csvRepository;
-    }
+    private final CsvRepository csvRepository;
+    private final MasterService masterService;
 
     public List<CsvDTO> listAll() throws IOException, InterruptedException {
         updateBid();
