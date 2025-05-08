@@ -97,7 +97,6 @@ public class MasterService {
         Optional.ofNullable(dto.getTaxCryptoCode()).ifPresent(currentTransaction::setTaxCryptoCode);
         Optional.ofNullable(dto.getTaxAmount()).ifPresent(currentTransaction::setTaxAmount);
         Optional.ofNullable(dto.getExchange()).ifPresent(currentTransaction::setExchange);
-        Optional.ofNullable(dto.getProfit()).ifPresent(currentTransaction::setProfit);
 
         return new BuyDTO(buyRepository.save(currentTransaction));
     }
@@ -108,11 +107,6 @@ public class MasterService {
     }
 
     public void insert(BuyDTO dto) throws IOException, InterruptedException {
-        //dto.setBid(apiBid(dto.getCode(), dto.getCodein()));
-        //dto.setProfit(profitCalculation(dto.getBid(), dto.getAmountCryptoPurchased(), dto.getAmountSpent(), dto.getTaxAmount(), dto));
-        //dto.setTotalProfit(totalProfit(dto.getProfit()));
-        //dto.setAverageValue(average());
-
         BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
     }
