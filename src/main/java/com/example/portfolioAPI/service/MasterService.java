@@ -35,7 +35,6 @@ public class MasterService {
     }
 
     public List<BuyDTO> listAll() throws IOException, InterruptedException {
-        updateBid();
         List<BuyEntity> buy = buyRepository.findAll();
         return buy.stream().map(BuyDTO::new).toList();
     }
@@ -109,6 +108,7 @@ public class MasterService {
     public void insert(BuyDTO dto) throws IOException, InterruptedException {
         BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
         buyRepository.save(buyEntity);// Salva na tabela buy
+        updateBid();
     }
 
     public BigDecimal apiBid(String code, String codein) throws IOException, InterruptedException {

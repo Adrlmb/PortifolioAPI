@@ -24,7 +24,6 @@ public class CsvService {
     private final BuyRepository buyRepository;
 
     public List<BuyDTO> listAll() throws IOException, InterruptedException {
-        updateBid();
         List<BuyEntity> csv = buyRepository.findAll();
         return csv.stream().map(BuyDTO::new).toList();
     }
@@ -89,6 +88,7 @@ public class CsvService {
             }
 
             buyRepository.saveAll(transacoes);
+            updateBid();
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao importar CSV: " + e.getMessage());
