@@ -38,7 +38,7 @@ public class BuyDTO {
     }
 
     public void setTaxCryptoCode(String taxCryptoCode) {
-        this.taxCryptoCode = taxCryptoCode.toUpperCase();
+        this.taxCryptoCode = (taxCryptoCode != null) ? taxCryptoCode.toUpperCase() : null;
     }
     public void setExchange(String exchange){
         this.exchange = (exchange != null) ? exchange.toUpperCase() : null;
