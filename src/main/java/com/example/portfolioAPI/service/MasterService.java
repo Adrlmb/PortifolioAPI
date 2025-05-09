@@ -135,6 +135,9 @@ public class MasterService {
     }
 
     public BigDecimal profit(String amount, BigDecimal currentPrice, BigDecimal totalSpent){
+        if(totalSpent == null){
+            totalSpent = bigDecimalConverter("0");
+        }
         BigDecimal amountBrought = bigDecimalConverter(amount);
         return amountBrought.multiply(currentPrice).subtract(totalSpent);
     }
