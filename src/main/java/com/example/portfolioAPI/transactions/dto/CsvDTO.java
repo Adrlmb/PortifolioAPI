@@ -1,6 +1,6 @@
-package com.example.portfolioAPI.dto;
+package com.example.portfolioAPI.transactions.dto;
 
-import com.example.portfolioAPI.entity.CsvEntity;
+import com.example.portfolioAPI.transactions.entity.CsvEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;

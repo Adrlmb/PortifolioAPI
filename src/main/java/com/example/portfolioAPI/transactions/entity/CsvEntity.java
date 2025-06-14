@@ -1,6 +1,6 @@
-package com.example.portfolioAPI.entity;
+package com.example.portfolioAPI.transactions.entity;
 
-import com.example.portfolioAPI.dto.CsvDTO;
+import com.example.portfolioAPI.transactions.dto.CsvDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

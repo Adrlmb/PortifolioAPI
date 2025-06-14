@@ -1,7 +1,7 @@
-package com.example.portfolioAPI.controller;
+package com.example.portfolioAPI.transactions.controller;
 
-import com.example.portfolioAPI.dto.BuyDTO;
-import com.example.portfolioAPI.service.MasterService;
+import com.example.portfolioAPI.transactions.dto.BuyDTO;
+import com.example.portfolioAPI.transactions.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,7 @@
-package com.example.portfolioAPI.entity;
+package com.example.portfolioAPI.transactions.entity;
 
-import com.example.portfolioAPI.dto.BuyDTO;
+import com.example.portfolioAPI.transactions.dto.BuyDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;

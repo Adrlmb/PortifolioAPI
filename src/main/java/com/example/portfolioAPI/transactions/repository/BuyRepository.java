@@ -1,6 +1,6 @@
-package com.example.portfolioAPI.repository;
+package com.example.portfolioAPI.transactions.repository;
 
-import com.example.portfolioAPI.entity.BuyEntity;
+import com.example.portfolioAPI.transactions.entity.BuyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

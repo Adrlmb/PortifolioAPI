@@ -1,8 +1,8 @@
-package com.example.portfolioAPI.service;
+package com.example.portfolioAPI.transactions.service;
 
-import com.example.portfolioAPI.dto.BuyDTO;
-import com.example.portfolioAPI.entity.BuyEntity;
-import com.example.portfolioAPI.repository.BuyRepository;
+import com.example.portfolioAPI.transactions.dto.BuyDTO;
+import com.example.portfolioAPI.transactions.entity.BuyEntity;
+import com.example.portfolioAPI.transactions.repository.BuyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
