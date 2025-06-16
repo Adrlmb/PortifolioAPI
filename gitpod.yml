@@ -1,0 +1,10 @@
+image: maven:3.9.4-eclipse-temurin-17
+
+tasks:
+  - name: Build and Run Spring Boot Application
+    init: mvn clean install
+    command: mvn spring-boot:run
+
+ports:
+  - port: 8080
+    onOpen: open-preview
