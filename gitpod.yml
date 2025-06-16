@@ -1,7 +1,7 @@
-image: maven:3.9.4-eclipse-temurin-17
+image: maven:3.9.6-eclipse-temurin-21
 
 tasks:
-  - name: Build and Run Spring Boot Application
+  - name: Build and Run Spring Boot
     init: mvn clean install
     command: mvn spring-boot:run
 
