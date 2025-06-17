@@ -24,4 +24,6 @@ public class UserController {
         service.insert(dto);
     }
 
+    //add status HTTP with ResponseEntity, validations and exceptions.
+
 }
