@@ -117,6 +117,7 @@ public class MasterService {
         Optional.ofNullable(dto.getTaxAmount()).ifPresent(currentTransaction::setTaxAmount);
         Optional.ofNullable(dto.getExchange()).ifPresent(currentTransaction::setExchange);
 
+        updateBid();
         return new BuyDTO(buyRepository.save(currentTransaction));
     }
 
