@@ -10,4 +10,8 @@ public class ErrorResponse{
   private int status;
   private String message;
   private LocalDateTime timestamp;
+
+  public ErrorResponse(String message){
+    this.message = message;
+  }
 }
