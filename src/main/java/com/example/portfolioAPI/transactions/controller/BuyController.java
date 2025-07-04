@@ -22,7 +22,7 @@ public class BuyController {
     }
 
     @GetMapping("/{id}")
-    public List<BuyDTO> listByID(@PathVariable("id") Long id) {
+    public BuyDTO listByID(@PathVariable("id") Long id) {
         return masterService.listByID(id);
     }
 
