@@ -1,5 +1,6 @@
 package com.example.portfolioAPI.transactions.service;
 
+import com.example.portfolioAPI.exceptions.IdNotFoundException;
 import com.example.portfolioAPI.transactions.dto.BuyDTO;
 import com.example.portfolioAPI.transactions.entity.BuyEntity;
 import com.example.portfolioAPI.transactions.repository.BuyRepository;
@@ -41,9 +42,9 @@ public class MasterService {
         return buy.stream().map(BuyDTO::new).toList();
     }
 
-    public List<BuyDTO> listByID(Long id){
-        Optional<BuyEntity> buy = buyRepository.findById(id);
-        return buy.stream().map(BuyDTO::new).toList();
+    public BuyDTO listByID(Long id){
+        BuyEntity buy = buyRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Objeto com id: "+ id +" não encontrado"));
+        return new BuyDTO(buy);
     }
 
     public void updateBid() throws IOException, InterruptedException {
@@ -95,7 +96,7 @@ public class MasterService {
     @Transactional
     public BuyDTO modifyById(Long id, BuyDTO dto) throws IOException, InterruptedException {
         BuyEntity currentTransaction = buyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new IdNotFoundException("Item "+ id + " não encontrado"));
 
         if(dto.getCodein() != null){
             currentTransaction.setCodein(dto.getCodein());
