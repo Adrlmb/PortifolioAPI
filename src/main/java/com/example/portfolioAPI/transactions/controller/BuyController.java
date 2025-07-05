@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/buy")
@@ -17,8 +20,16 @@ public class BuyController {
     private MasterService masterService;
 
     @GetMapping
-    public List<BuyDTO> listALl() throws IOException, InterruptedException {
-        return masterService.listAll();
+    public ResponseEntity<Map<String, Object>> listALl() throws IOException, InterruptedException {
+        //add nullException
+        List<BuyDTO> list = masterService.listAll();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "List returned successfully");
+        response.put("total", list.size());
+        response.put("transactions", list);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -27,8 +38,9 @@ public class BuyController {
     }
 
     @PostMapping
-    public void insert(@RequestBody BuyDTO dto) throws IOException, InterruptedException {
+    public ResponseEntity<String> insert(@RequestBody BuyDTO dto) throws IOException, InterruptedException {
         masterService.insert(dto);
+        return ResponseEntity.ok("Transaction added successfully");
     }
 
     @PatchMapping("/{id}")
