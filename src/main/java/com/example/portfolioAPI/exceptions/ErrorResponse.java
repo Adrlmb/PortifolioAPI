@@ -1,4 +1,5 @@
 package com.example.portfolioAPI.exceptions;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,9 @@ public class ErrorResponse{
   private String message;
   private LocalDateTime timestamp;
 
-  public ErrorResponse(String message){
+  public ErrorResponse(int status, String message){
+    this.status = status;
     this.message = message;
+    this.timestamp = LocalDateTime.now();
   }
 }
