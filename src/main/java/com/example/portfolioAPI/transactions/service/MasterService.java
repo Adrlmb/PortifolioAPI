@@ -67,29 +67,6 @@ public class MasterService {
             row.setProfit(profit);
         }
 
-//        String lastCode = null;
-//        String lastCodein = null;
-//        BigDecimal lastBid = null;
-//        BigDecimal profitLoss = null;
-//
-//        for(BuyEntity row : entity){
-//            if(row.getCode().equals(lastCode) && row.getCodein().equals(lastCodein)){
-//                profitLoss = (profit(row.getAmountCryptoPurchased(), lastBid, row.getAmountSpent()));
-//
-//                row.setBid(lastBid);
-//                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
-//            }else {
-//                BigDecimal bid = apiBid(row.getCode(), row.getCodein());
-//                profitLoss = (profit(row.getAmountCryptoPurchased(), bid, row.getAmountSpent()));
-//
-//                row.setProfit(profitLoss.setScale(2, RoundingMode.DOWN));
-//                row.setBid(bid);
-//
-//                lastCode = row.getCode();
-//                lastCodein = row.getCodein();
-//                lastBid = bid;
-//            }
-//        }
         buyRepository.saveAll(entity);
     }
 
