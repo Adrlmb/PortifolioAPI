@@ -43,7 +43,7 @@ public class MasterService {
     }
 
     public BuyDTO listByID(Long id){
-        BuyEntity buy = buyRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Objeto com id: "+ id +" não encontrado"));
+        BuyEntity buy = buyRepository.findById(id).orElseThrow(() -> new IdNotFoundException(id));
         return new BuyDTO(buy);
     }
 
@@ -79,7 +79,7 @@ public class MasterService {
     @Transactional
     public BuyDTO modifyById(Long id, BuyDTO dto) throws IOException, InterruptedException {
         BuyEntity currentTransaction = buyRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Item "+ id + " não encontrado"));
+                .orElseThrow(() -> new IdNotFoundException(id));
 
         if(dto.getCodein() != null){
             currentTransaction.setCodein(dto.getCodein());
@@ -108,12 +108,6 @@ public class MasterService {
     public void delete(Long id) {
         BuyEntity buy = buyRepository.findById(id).get();
         buyRepository.delete(buy);
-    }
-
-    public void insert(BuyDTO dto) throws IOException, InterruptedException {
-        BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
-        buyRepository.save(buyEntity);// Salva na tabela buy
-        updateBid();
     }
 
     public BigDecimal apiBid(String code, String codein) throws IOException, InterruptedException {
