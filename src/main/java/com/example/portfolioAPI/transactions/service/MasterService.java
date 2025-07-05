@@ -47,6 +47,12 @@ public class MasterService {
         return new BuyDTO(buy);
     }
 
+    public void insert(BuyDTO dto) throws IOException, InterruptedException {
+        BuyEntity buyEntity = new BuyEntity(dto);// pega o que foi digitado no post
+        buyRepository.save(buyEntity);// Salva na tabela buy
+        updateBid();
+    }
+
     public void updateBid() throws IOException, InterruptedException {
         //testar tempo de resposta entre esse e o código comentado
         List<BuyEntity> entity = buyRepository.findAll();
