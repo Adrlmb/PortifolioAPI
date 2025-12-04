@@ -1,6 +1,7 @@
 package com.example.portfolioAPI.transactions.entity;
 
 import com.example.portfolioAPI.transactions.dto.BuyDTO;
+import com.example.portfolioAPI.users.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,10 @@ public class BuyEntity {
 
     @Column(name = "AVERAGE_VALUE")
     private BigDecimal averageValue;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user; // <-- ligação com o usuário logado
 
     public BuyEntity(BuyDTO dto){
         BeanUtils.copyProperties(dto, this);
