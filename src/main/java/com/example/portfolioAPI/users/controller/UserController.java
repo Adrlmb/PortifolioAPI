@@ -1,8 +1,12 @@
 package com.example.portfolioAPI.users.controller;
+import com.example.portfolioAPI.users.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import com.example.portfolioAPI.users.dto.UserDTO;
 import com.example.portfolioAPI.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +17,7 @@ public class UserController {
 
     @Autowired
     private UserService service;
+    private UserRepository repository;
 
     @GetMapping
     public List<UserDTO> listAll(){
@@ -25,5 +30,4 @@ public class UserController {
     }
 
     //add status HTTP with ResponseEntity, validations and exceptions.
-
 }
