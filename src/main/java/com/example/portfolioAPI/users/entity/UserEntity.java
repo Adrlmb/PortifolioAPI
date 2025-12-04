@@ -14,9 +14,11 @@ public class UserEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String username;
     private String email;
-    private String hashSenha;
+    private String password;
+
+
 
     public UserEntity(UserDTO dto){
         BeanUtils.copyProperties(dto, this);
