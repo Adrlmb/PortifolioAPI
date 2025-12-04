@@ -8,9 +8,9 @@ import org.springframework.beans.BeanUtils;
 @Data
 @NoArgsConstructor
 public class UserDTO {
-    private String nome;
+    private String username;
     private String email;
-    private String hashSenha;
+    private String password;
 
 public UserDTO(UserEntity entity){
     BeanUtils.copyProperties(entity, this);
