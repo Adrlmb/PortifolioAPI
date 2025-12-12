@@ -18,11 +18,11 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    private SecretKey getSigninKey(){
+    private SecretKey getSigninKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(UserEntity user){
+    public String generateToken(UserEntity user) {
         return Jwts.builder()
                 .subject(user.getEmail())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -30,7 +30,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String getEmailFromToken(String token){
+    public String getEmailFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigninKey())
                 .build()
@@ -38,7 +38,6 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
-
 
 
 }
