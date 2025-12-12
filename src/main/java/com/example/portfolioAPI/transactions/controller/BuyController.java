@@ -2,8 +2,11 @@ package com.example.portfolioAPI.transactions.controller;
 
 import com.example.portfolioAPI.transactions.dto.BuyDTO;
 import com.example.portfolioAPI.transactions.service.MasterService;
+import com.example.portfolioAPI.users.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,10 +22,16 @@ public class BuyController {
     @Autowired
     private MasterService masterService;
 
+    // Pega o usuário logado
+    private UserEntity getAuthenticatedUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserEntity) auth.getPrincipal();
+    }
+
     @GetMapping
     public ResponseEntity<Map<String, Object>> listALl() throws IOException, InterruptedException {
-        //add nullException
-        List<BuyDTO> list = masterService.listAll();
+        UserEntity user = getAuthenticatedUser();
+        List<BuyDTO> list = masterService.listAllByUser(user);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "List returned successfully");
@@ -33,24 +42,32 @@ public class BuyController {
     }
 
     @GetMapping("/{id}")
-    public BuyDTO listByID(@PathVariable("id") Long id) {
-        return masterService.listByID(id);
+    public ResponseEntity<BuyDTO> listByID(@PathVariable("id") Long id) {
+        UserEntity user = getAuthenticatedUser();
+        BuyDTO dto =  masterService.listByIdAndUser(id, user);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
     public ResponseEntity<String> insert(@RequestBody BuyDTO dto) throws IOException, InterruptedException {
-        masterService.insert(dto);
+        UserEntity user = getAuthenticatedUser();
+        masterService.insert(dto, user);
+
         return ResponseEntity.ok("Transaction added successfully");
     }
 
     @PatchMapping("/{id}")
-    public BuyDTO modifyById(@PathVariable Long id,@RequestBody BuyDTO dto) throws IOException, InterruptedException {
-        return masterService.modifyById(id, dto);
+    public ResponseEntity<BuyDTO> modifyById(@PathVariable Long id,@RequestBody BuyDTO dto) throws IOException, InterruptedException {
+        UserEntity user = getAuthenticatedUser();
+        BuyDTO updated = masterService.modifyById(id, dto, user);
+
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        masterService.delete(id);
+        UserEntity user = getAuthenticatedUser();
+        masterService.delete(id, user);
         return ResponseEntity.ok().build();
     }
 
