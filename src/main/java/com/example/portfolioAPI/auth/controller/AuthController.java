@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    UserRepository repository;
-    JwtService jwtService;
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final UserRepository repository;
+    private final JwtService jwtService;
+    private final BCryptPasswordEncoder encoder;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<?> signup(@RequestBody UserDTO user){
+    public ResponseEntity<?> signup(@RequestBody UserDTO user) {
         user.setPassword(encoder.encode(user.getPassword()));
         UserEntity entity = new UserEntity(user);
         repository.save(entity);
@@ -31,11 +30,11 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login (@RequestBody LoginDTO login){
-        UserEntity user = repository.findByEmail(login.getEmail()).orElseThrow(()-> new RuntimeException("Invalid password"));
+    public ResponseEntity<?> login(@RequestBody LoginDTO login) {
+        UserEntity user = repository.findByEmail(login.getEmail()).orElseThrow(() -> new RuntimeException("Invalid password"));
 
-        if(!encoder.matches(login.getPassword(), user.getPassword())){
-            throw new RuntimeException("Invalid Password");
+        if (!encoder.matches(login.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid email or p  assword");
         }
 
         String token = jwtService.generateToken(user);
