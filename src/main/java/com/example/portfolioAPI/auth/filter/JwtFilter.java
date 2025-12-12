@@ -22,6 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtService jwtService;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -29,22 +30,38 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain) throws ServletException, IOException{
+            FilterChain chain) throws ServletException, IOException {
+
+        System.out.println(">>> Entrou no JwtFilter");
 
         String header = request.getHeader("Authorization");
+        System.out.println("Header recebido: " + header);
 
-        if (header != null && header.startsWith(("Bearer "))) {
+        String email = null;
+
+        if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            String email = jwtService.getEmailFromToken(token);
 
+            try {
+                email = jwtService.getEmailFromToken(token);
+            } catch (Exception e) {
+                System.out.println("Erro ao extrair email do token: " + e.getMessage());
+            }
+        }
+
+        if (email != null) {
             UserEntity user = userRepository.findByEmail(email).orElse(null);
 
-            if(user != null){
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            if (user != null) {
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                user, null, new ArrayList<>());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
+        }
 
-chain.doFilter(request, response);        }
+        // sempre chamar chain.doFilter!
+        chain.doFilter(request, response);
     }
 }
