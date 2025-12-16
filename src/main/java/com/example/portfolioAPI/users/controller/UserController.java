@@ -1,5 +1,6 @@
 package com.example.portfolioAPI.users.controller;
 import com.example.portfolioAPI.users.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/user")
 public class UserController {
 
-    @Autowired
-    private UserService service;
-    private UserRepository repository;
+    private final UserService service;
+    private final UserRepository repository;
 
     @GetMapping
     public List<UserDTO> listAll(){

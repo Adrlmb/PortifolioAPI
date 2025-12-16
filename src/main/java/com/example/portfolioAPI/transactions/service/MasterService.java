@@ -8,6 +8,7 @@ import com.example.portfolioAPI.users.dto.UserDTO;
 import com.example.portfolioAPI.users.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -26,18 +27,12 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class MasterService {
 
     private final BuyRepository buyRepository;
-    private final HttpClient httpClient;
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper;
-
-    @Autowired
-    public MasterService(BuyRepository buyRepository) {
-        this.buyRepository = buyRepository;
-        this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
-    }
 
     // Lista apenas as transações do usuário logado
     public List<BuyDTO> listAllByUser(UserEntity user) throws IOException, InterruptedException {

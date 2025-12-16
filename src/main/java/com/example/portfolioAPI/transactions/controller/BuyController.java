@@ -3,6 +3,7 @@ package com.example.portfolioAPI.transactions.controller;
 import com.example.portfolioAPI.transactions.dto.BuyDTO;
 import com.example.portfolioAPI.transactions.service.MasterService;
 import com.example.portfolioAPI.users.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,11 +17,11 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/buy")
 public class BuyController {
 
-    @Autowired
-    private MasterService masterService;
+    private final MasterService masterService;
 
     // Pega o usuário logado
     private UserEntity getAuthenticatedUser(){

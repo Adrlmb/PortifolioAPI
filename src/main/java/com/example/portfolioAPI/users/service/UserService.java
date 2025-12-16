@@ -3,20 +3,17 @@ package com.example.portfolioAPI.users.service;
 import com.example.portfolioAPI.users.dto.UserDTO;
 import com.example.portfolioAPI.users.entity.UserEntity;
 import com.example.portfolioAPI.users.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService{
 
-    private UserRepository userRepository;
-
-    @Autowired
-    public UserService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     public List<UserDTO> listAll(){
         List<UserEntity> entity = userRepository.findAll();

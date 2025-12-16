@@ -3,6 +3,7 @@ package com.example.portfolioAPI.transactions.controller;
 import com.example.portfolioAPI.transactions.dto.BuyDTO;
 import com.example.portfolioAPI.transactions.repository.CsvRepository;
 import com.example.portfolioAPI.transactions.service.CsvService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +13,12 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/csv")
 public class CsvController {
 
-    @Autowired
-    private CsvService csvService;
-
-    @Autowired
-    private CsvRepository csvRepository;
+    private final CsvService csvService;
+    private final CsvRepository csvRepository;
 
     @PostMapping
     public ResponseEntity<String> importar(@RequestParam("file") MultipartFile file) {
